@@ -16,7 +16,13 @@ This document has the comprobations required to prove the success of the cloud p
 ![Resources on AZURE](./img/recursosAzure1.png "Resources list")
 ![Resources on AZURE](./img/recursosAzure2.png "Resources list")
 
+## tf plan
+
+![ft plan result](./img/plan.png "Resources list")
 
 ## Last tf apply
 
-![Resources on AZURE](./img/LastApply.png "Resources list")
+![ft apply result](./img/LastApply.png "Resources list")
+
+## tf destroy
+![ft destroy result](./img/destroy.png "Resources list")
