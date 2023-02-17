@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: users
+  labels:
+   app: users
+  namespace: proyecto
+spec:
+  replicas: 1
+  #strategy:
+  #  type: RollingUpdate
+  selector:
+    matchLabels:
+         app: users
+  template:
+    metadata:
+      labels:
+        app: users
+    spec:
+     containers:
+     - name: users
+       image: andres192715/users-api:0.0.1
+       env:
+        - name: JWT_SECRET
+          value: "PRFT"
+        - name: SERVER_PORT
+          value: "8083"
+       ports:
+        - containerPort: 8083
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+ name: users
+ namespace: proyecto
+ labels:
+  app: users
+spec:
+ type: ClusterIP
+ ports:
+  - port: 8083
+    targetPort: 8083
+    protocol: TCP
+ selector:
+  app: users   
