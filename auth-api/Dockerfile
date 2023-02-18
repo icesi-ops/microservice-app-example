@@ -11,7 +11,7 @@ COPY . .
 RUN go mod tidy
 
 #RUN go mod download && go mod verify
-
+EXPOSE 8000
 
 RUN go build -v -o /usr/local/bin/app .
 #RUN go build -o /go/bin/myapp cmd/main.go
