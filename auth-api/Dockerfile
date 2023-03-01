@@ -4,8 +4,6 @@ WORKDIR /usr/src/app
 
 
 ENV GO111MODULE=on
-#ENV USERS_API_ADDRESS=http://192.168.33.10:8083
-#ENV JWT_SECRET=PRFT
 RUN go mod init github.com/bortizf/microservice-app-example/tree/master/auth-api
 RUN go clean -modcache
 COPY . .
@@ -13,7 +11,7 @@ COPY . .
 RUN go mod tidy
 
 #RUN go mod download && go mod verify
-EXPOSE 8000
+EXPOSE 8081
 
 RUN go build -v -o /usr/local/bin/app .
 #RUN go build -o /go/bin/myapp cmd/main.go
