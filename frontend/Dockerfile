@@ -8,9 +8,6 @@ COPY package*.json ./
 
 RUN npm install
 
-
-ENV AUTH_API_ADDRESS =http://192.168.33.11:8000
-ENV TODOS_API_ADDRESS=http://192.168.33.12:8082
 ENV PORT=8080 
 
 COPY . . /app/

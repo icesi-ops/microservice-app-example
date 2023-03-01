@@ -1,9 +1,10 @@
-FROM python:3.10.2-slim
+FROM python:3.6-alpine
+
 WORKDIR /usr/src/app
-COPY . .
-RUN set -xe \
-    && apt-get update -y \
-    && apt-get install -y python3-pip
+RUN apk add --no-cache build-base
+COPY requirements.txt .
 RUN pip3 install -r requirements.txt
-EXPOSE 6379
-CMD ["python","./main.py"]
+
+COPY main.py .
+
+CMD ["python3","-u","main.py"]
