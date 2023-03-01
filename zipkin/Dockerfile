@@ -1,9 +1,10 @@
 # Imagen base
-FROM openzipkin/zipkin:latest
+FROM openzipkin/zipkin
 
 # Puerto que usará Zipkin
 EXPOSE 9411
 
 # Configuración de Zipkin
-COPY zipkin.jar /zipkin.jar
+COPY zipkin.jar /
+
 CMD ["java", "-jar", "/zipkin.jar"]
