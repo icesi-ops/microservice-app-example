@@ -1,12 +1,16 @@
-FROM node:8-alpine
-
-EXPOSE 8080
-
+FROM golang:alpine AS build
 WORKDIR /usr/src/app
 
-COPY package.json ./
-RUN npm install
 
+
+ENV GO111MODULE=on
+RUN go mod init github.com/bortizf/microservice-app-example/tree/master/auth-api
+RUN go clean -modcache
 COPY . .
+RUN go mod tidy
 
-CMD ["sh", "-c", "npm start" ]
+EXPOSE 8081
+
+RUN go build -v -o /usr/local/bin/app .
+
+CMD [ "app" ]
