@@ -1,0 +1,56 @@
+version: "3"
+services:
+  frontend:
+    build: ./frontend
+    image: xoten/frontend:1.0.1
+    depends_on:
+      - zipkin
+      - auth-api
+      - todos-api
+      - users-api
+    ports:
+      - 8080:8080
+
+  auth-api:
+    build: ./auth-api
+    image: xoten/auth-api:1.0.1
+    ports:
+      - 8000:8000
+    depends_on:
+      - zipkin
+      - users-api
+  todos-api:
+    build: ./todos-api
+    image: xoten/todos-api:1.0.1
+    ports:
+      - 8082:8082
+    depends_on:
+      - zipkin
+      - redis_queue
+
+  users-api:
+    build: ./users-api
+    image: xoten/users-api:1.0.1
+    ports:
+      - 8083:8083
+    depends_on:
+      - zipkin
+
+  log-message-processor:
+    build: ./log-message-processor
+    image: xoten/log-message-processor:1.0.1
+    depends_on:
+      - zipkin
+      - redis_queue
+  
+  zipkin:
+    image: openzipkin/zipkin
+    ports:
+      - 9411:9411
+
+  redis_queue:
+    ports:
+      - 6379:6379
+    image: redis
+
+  
