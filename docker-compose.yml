@@ -1,0 +1,55 @@
+version: "3"
+services:
+  frontend:
+    build: ./frontend
+    image: chigui794/frontend:1.1.0
+    depends_on:
+      - zipkin
+      - auth-api
+      - todos-api
+      - users-api
+    ports:
+      - 8080:8080
+
+  users-api:
+    build: ./users-api
+    image: chigui794/users-api:1.1.0
+    ports:
+      - 8083:8083
+    depends_on:
+      - zipkin
+
+  auth-api:
+    build: ./auth-api
+    image: chigui794/auth-api:1.1.0
+    ports:
+      - 8000:8000
+    depends_on:
+      - zipkin
+      - users-api
+
+  todos-api:
+    build: ./todos-api
+    image: chigui794/todos-api:1.1.0
+    ports:
+      - 8082:8082
+    depends_on:
+      - zipkin
+      - redis_queue
+
+  log-message-processor:
+    build: ./log-message-processor
+    image: chigui794/log-message-processor:1.1.0
+    depends_on:
+      - zipkin
+      - redis_queue
+
+  redis_queue:
+    ports:
+      - 6379:6379
+    image: redis
+
+  zipkin:
+    image: openzipkin/zipkin
+    ports:
+      - 9411:9411    
