@@ -1,0 +1,54 @@
+version: "3"
+services:
+  frontend:
+    build: ./frontend
+    image: foltrest/frontend:0.1.0
+    depends_on:
+      - zipkin
+      - auth-api
+      - todos-api
+      - users-api
+    ports:
+      - 8080:8080
+
+  auth-api:
+    build: ./auth-api
+    image: foltrest/auth-api:0.1.0
+    depends_on:
+      - zipkin
+      - users-api
+    ports:
+      - 8000:8000
+  todos-api:
+    build: ./todos-api
+    image: foltrest/todos-api:0.1.0
+    depends_on:
+      - zipkin
+      - redis_queue
+    ports:
+      - 8082:8082
+
+  users-api:
+    build: ./users-api
+    image: foltrest/users-api:0.1.0
+    depends_on:
+      - zipkin
+    ports:
+      - 8083:8083
+     
+  log-message-processor:
+    build: ./log-message-processor
+    image: foltrest/log-message-processor:0.1.0
+    depends_on:
+      - zipkin
+      - redis_queue
+  
+  zipkin:
+    image: openzipkin/zipkin
+    ports:
+      - 9411:9411
+
+  redis_queue:
+    image: redis
+    ports:
+      - 6379:6379
