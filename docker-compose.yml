@@ -1,0 +1,82 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7.0
+    ports:
+      - "6379:6379"
+  zipkin:
+    image: openzipkin/zipkin
+    ports:
+      - 9411:9411
+
+  auth-api:
+    build: ./auth-api
+    image: j0tunh3im/auth-api:0.1.0
+    environment:
+      - AUTH_API_PORT=8000
+      - USERS_API_ADDRESS=http://users-api:8083
+      - JWT_SECRET=PRFT
+    ports:
+      - "8000:8000"
+    depends_on:
+      - zipkin
+      - users-api
+ 
+  frontend:
+    build: ./frontend
+    image: j0tunh3im/frontend:0.1.0
+    environment:
+      - PORT=8080
+      - AUTH_API_ADDRESS=http://auth-api:8000
+      - TODOS_API_ADDRESS=http://todos-api:8082
+    ports:
+      - "8080:8080"
+    depends_on:
+      - zipkin
+      - auth-api
+      - todos-api
+      - users-api
+      
+
+  log-message-processor:
+    build: ./log-message-processor
+    image: j0tunh3im/log-message:0.1.0
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_CHANNEL=log_channel
+    depends_on:
+      - zipkin
+      - redis
+ 
+  todos-api:
+    build: ./todos-api
+    image: j0tunh3im/todos-api:0.1.0
+    environment:
+      - TODO_API_PORT=8082
+      - JWT_SECRET=PRFT
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_CHANNEL=log_channel
+    ports:
+      - "8082:8082"
+    depends_on:
+      - zipkin
+      - redis
+ 
+  users-api:
+    build: ./users-api
+    image: j0tunh3im/users-api:0.1.0
+    environment:
+      - SERVER_PORT=8083
+      - JWT_SECRET=PRFT
+    ports:
+      - "8083:8083"
+    depends_on:
+      - zipkin
+
+networks:
+  default:
+    external:
+      name: distribuidos
