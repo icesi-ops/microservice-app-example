@@ -5,6 +5,10 @@ services:
     image: redis:7.0
     ports:
       - "6379:6379"
+  zipkin:
+    image: openzipkin/zipkin
+    ports:
+      - 9411:9411
 
   auth-api:
     build: ./auth-api
@@ -16,6 +20,7 @@ services:
     ports:
       - "8000:8000"
     depends_on:
+      - zipkin
       - users-api
  
   frontend:
@@ -28,9 +33,11 @@ services:
     ports:
       - "8080:8080"
     depends_on:
+      - zipkin
       - auth-api
       - todos-api
       - users-api
+      
 
   log-message-processor:
     build: ./log-message-processor
@@ -40,6 +47,7 @@ services:
       - REDIS_PORT=6379
       - REDIS_CHANNEL=log_channel
     depends_on:
+      - zipkin
       - redis
  
   todos-api:
@@ -54,6 +62,7 @@ services:
     ports:
       - "8082:8082"
     depends_on:
+      - zipkin
       - redis
  
   users-api:
@@ -64,6 +73,8 @@ services:
       - JWT_SECRET=PRFT
     ports:
       - "8083:8083"
+    depends_on:
+      - zipkin
 
 networks:
   default:
