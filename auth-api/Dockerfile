@@ -11,5 +11,5 @@ RUN go mod init github.com/bortizf/microservice-app-example/tree/master/auth-api
 RUN go mod tidy
 RUN go build
 
-CMD ["app"]
+CMD ["./auth-api"]
 
