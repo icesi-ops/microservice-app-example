@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-api
+  labels:
+    app: todo-api
+spec:
+  minReadySeconds: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todo-api
+  template:
+    metadata:
+      labels:
+        app: todo-api
+    spec:
+      containers:
+        - name: todo-api
+          image: xoten/todos-api:1.0.0
+          # command: ["sh", "-c", "touch /tmp/healthy && sleep 86400"]
+          # readinessProbe:
+          #  exec:
+          #     command:
+          #     - cat
+          #     - /tmp/healthy
+          #  initialDelaySeconds: 5
+          #  periodSeconds: 3
+          env:
+            - name: JWT_SECRET
+              value: "PRFT"
+            - name: REDIS_HOST
+              value: "svc-redis.default.svc.cluster.local"
+            - name: REDIS_PORT
+              value: "6379"
+            - name: REDIS_CHANNEL
+              value: "log_channel"
+            - name: ZIPKIN_URL
+              value: "http://svc-zipkin.default.svc.cluster.local:9411/api/v2/spans"  
+          readinessProbe:
+                tcpSocket:
+                  port: 8082
+                initialDelaySeconds: 5
+                periodSeconds: 5
+          # livenessProbe:
+          #     httpGet:
+          #       path: /todos
+          #       port: 8082
+          #       httpHeaders:
+          #       - name: Authorization
+          #         value: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTgzNDQwODEsImZpcnN0bmFtZSI6IkZvbyIsImxhc3RuYW1lIjoiQmFyIiwicm9sZSI6IkFETUlOIiwidXNlcm5hbWUiOiJhZG1pbiJ9.ibWxHUGzsQOsDTHQfzzk-H9fepuQoX_IVN0_UnBx3p4
+          #     periodSeconds: 5
+          #     initialDelaySeconds: 10
+          ports:
+            - containerPort: 8082
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-todo-api
+  labels:
+    app: todo-api
+spec:
+  selector:
+    app: todo-api
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 8082
+      targetPort: 8082
+      name: http
