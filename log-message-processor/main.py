@@ -23,7 +23,7 @@ if __name__ == '__main__':
             data=encoded_span,
             headers={'Content-Type': 'application/x-thrift'},
         )
-
+        
     pubsub = redis.Redis(host=redis_host, port=redis_port, db=0).pubsub()
     pubsub.subscribe([redis_channel])
     for item in pubsub.listen():
@@ -56,7 +56,3 @@ if __name__ == '__main__':
         except Exception as e:
             print('did not send data to Zipkin: {}'.format(e))
             log_message(message)
-
-
-
-
