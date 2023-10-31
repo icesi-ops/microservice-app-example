@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lmp
+  labels:
+    app: lmp
+spec:
+  minReadySeconds: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lmp
+  template:
+    metadata:
+      labels:
+        app: lmp
+    spec:
+      containers:
+        - name: lmp
+          image: xoten/log-message-proccessor:1.0.0
+          env:
+            - name: JWT_SECRET
+              value: "PRFT"
+            - name: REDIS_HOST
+              value: "svc-redis.default.svc.cluster.local"
+            - name: REDIS_PORT
+              value: "6379"
+            - name: REDIS_CHANNEL
+              value: "log_channel"
+          
