@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  redis_queue:
+    image: redis
+    ports:
+      - "6379:6379"
+
+  auth-api:
+    build: ./auth-api
+    image: andrescuellar/auth-api:0.1.1
+    ports:
+      - "8000:8000"
+    depends_on:
+      - users-api
+      - zipkin
+
+  frontend:
+    build: ./frontend
+    image: andrescuellar/frontend:0.1.1
+    ports:
+      - "8080:8080"
+    depends_on:
+      - auth-api
+      - todos-api
+      - users-api
+      - zipkin
+
+  log-message-processor:
+    build: ./log-message-processor
+    image: andrescuellar/log-message-processor:0.1.0
+    depends_on:
+      - redis_queue
+
+  todos-api:
+    build: ./todos-api
+    image: andrescuellar/todos-api:0.1.2
+    ports:
+      - "8082:8082"
+    depends_on:
+      - redis_queue
+      - zipkin 
+
+  users-api:
+    build: ./users-api
+    image: andrescuellar/users-api:0.1.1
+    ports:
+      - "8083:8083"
+    depends_on:
+      - zipkin
+
+  zipkin:
+    image: openzipkin/zipkin
+    ports:
+      - 9411:9411
