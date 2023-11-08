@@ -1,0 +1,32 @@
+services:
+  redis-logger:
+    image: "redis:alpine" 
+    ports:
+      - "6379:6379"
+  todos-api:
+    build: ./todos-api
+    ports:
+      - "8082:8082"
+    depends_on:
+      - redis-logger
+  users-api:
+    build: ./users-api
+    ports:
+      - "8083:8083"
+  auth-api:
+    build: ./auth-api
+    ports:
+      - "8000:8000"
+    depends_on:
+      - users-api
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - auth-api
+      - todos-api
+  log-message:
+    build: ./log-message-processor
+    depends_on:
+      - redis-logger
