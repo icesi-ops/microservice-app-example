@@ -14,4 +14,43 @@ In each folder you can find a more in-depth explanation of each component:
 ## Architecture
 
 Take a look at the components diagram that describes them and their interactions.
-![microservice-app-example](/arch-img/Microservices.png)
+![microservice-app-example](./arch-img/Microservices.png)
+
+## Docker
+First we need to build the images for each component. You can do it by running the following command in the root of the project:
+```Docker
+docker-compose up -d
+```
+![img.png](img.png)
+
+## Usage
+Once the images are built and the containers are running, 
+you can access the application by going to [http://localhost:8080](http://localhost:8080) in your browser.
+
+![img_5.png](img_5.png)
+
+![img_2.png](img_2.png)
+
+We have some initial data for you to test the application:
+
+|  Username | Password  |
+|-----------|-----------|
+| admin     | admin     |
+| johnd     | foo       |
+| janed     | ddd       |
+
+
+Or you can use the following curl command to get a JWT token:
+```bash
+curl -X POST  http://localhost:8000/login -d '{"username": "admin","password": "admin"}'
+```
+And then use the token to replace $token and do a GET request to the users API:
+```bash
+curl -X GET -H "Authorization: Bearer $token" http://localhost:8083/users/:username
+```
+
+Then, when you are inside your profile, you can create a TODO, and then you can see it in the TODOs list.
+
+![img_3.png](img_3.png)
+
+![img_4.png](img_4.png)

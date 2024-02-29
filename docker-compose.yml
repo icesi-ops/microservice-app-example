@@ -1,0 +1,84 @@
+version: '3'
+
+networks:
+    microtodo:
+        driver: bridge
+
+services:
+  users-api:
+    container_name: users-api
+    build:
+        context: ./users-api
+        dockerfile: Dockerfile
+    ports:
+        - "8083:8083"
+    networks:
+        - microtodo
+    environment:
+        JWT_SECRET: PRFT
+        SERVER_PORT: 8083
+
+  auth-api:
+    container_name: auth-api
+    build:
+        context: ./auth-api
+        dockerfile: Dockerfile
+    ports:
+        - "8000:8000"
+    networks:
+        - microtodo
+    environment:
+        JWT_SECRET: PRFT
+        AUTH_API_PORT: 8000
+        USERS_API_ADDRESS: http://users-api:8083
+
+  redis:
+    container_name: redis
+    image: redis:7.0
+    ports:
+        - "6379:6379"
+    networks:
+        - microtodo
+
+  todos-api:
+    container_name: todos-api
+    build:
+        context: ./todos-api
+        dockerfile: Dockerfile
+    ports:
+        - "8082:8082"
+    networks:
+        - microtodo
+    environment:
+        JWT_SECRET: PRFT
+        TODO_API_PORT: 8082
+        REDIS_HOST: redis
+        REDIS_PORT: 6379
+        REDIS_CHANNEL: log_channel
+
+  log-processor:
+    container_name: log-processor
+    build:
+        context: ./log-message-processor
+        dockerfile: Dockerfile
+    ports:
+        - "8050:8050"
+    networks:
+        - microtodo
+    environment:
+        REDIS_HOST: redis
+        REDIS_PORT: 6379
+        REDIS_CHANNEL: log_channel
+
+  frontend:
+    container_name: frontend
+    build:
+        context: ./frontend
+        dockerfile: Dockerfile
+    ports:
+        - "8080:8080"
+    networks:
+        - microtodo
+    environment:
+        TODOS_API_ADDRESS: http://todos-api:8082
+        AUTH_API_ADDRESS: http://auth-api:8000
