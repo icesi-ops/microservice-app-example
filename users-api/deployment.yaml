@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: users-api
+  namespace: distribuidos
+  labels:
+   app: microservices-example
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+         app: microservices-example
+         type: users-api
+  template:
+    metadata:
+      labels:
+        app: microservices-example
+        type: users-api
+    spec:
+     containers:
+     - name: users-api
+       image: estebanm1812/users-api:latest
+       ports:
+        - containerPort: 8083
