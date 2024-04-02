@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: users-api
+  namespace: distribuidos
+
+spec:
+  selector:
+   app: users-api
+  ports:
+   - protocol: TCP
+     port: 8083
+     targetPort: 8083
+     name: http

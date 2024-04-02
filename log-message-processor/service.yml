@@ -1,0 +1,13 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: log-message-procesor
+  namespace: distribuidos
+spec:
+  selector:
+   app: log-message-procesor
+  ports:
+   - protocol: TCP
+     port: 6029
+     targetPort: 6029
+     name: http
