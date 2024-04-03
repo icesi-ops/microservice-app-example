@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: frontend
+  namespace: frontend
+  labels:
+    project: frontendproject
+    service: client
+    version: "0.1"
+spec:
+  containers:
+    - name: frontend
+      image: daboca/frontend:v1
+      ports:
+        - containerPort: 8080
+      env:
+        - name: TODOS_API_ADDRESS
+          value: http://backend-nodeport.backend:8082
+        - name: AUTH_API_ADDRESS
+          value: http://auth-nodeport.auth:8000

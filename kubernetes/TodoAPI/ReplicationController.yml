@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: replication-controller-backend
+  namespace: backend
+spec:
+  replicas: 1
+  selector:
+    project: backendproject
+    service: server
+    version: "0.1"
+  template:
+    metadata:
+      name: todoapi
+      labels:
+        project: backendproject
+        service: server
+        version: "0.1"
+    spec:
+      containers:
+        - name: redis
+          image: redis:7.0
+          ports:
+            - containerPort: 6379
+
+        - name: todoapi
+          image: daboca/todos:v1
+          ports:
+            - containerPort: 8082
+          env:
+            - name: JWT_SECRET
+              value: PRFT
+            - name: TODO_API_PORT
+              value: "8082"
+            - name: REDIS_HOST
+              value: redis
+            - name: REDIS_PORT
+              value: "6379"
+            - name: REDIS_CHANNEL
+              value: log_channel
+
+        - name: log-processor
+          image: daboca/log-message-processor:v1
+          ports:
+            - containerPort: 8050
+          env:
+            - name: REDIS_HOST
+              value: localhost
+            - name: REDIS_PORT
+              value: "6379"
+            - name: REDIS_CHANNEL
+              value: log_channel
+
+

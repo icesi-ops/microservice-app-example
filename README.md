@@ -21,15 +21,15 @@ First we need to build the images for each component. You can do it by running t
 ```Docker
 docker-compose up -d
 ```
-![img.png](img.png)
+![img.png](images/img.png)
 
 ## Usage
 Once the images are built and the containers are running, 
 you can access the application by going to [http://localhost:8080](http://localhost:8080) in your browser.
 
-![img_5.png](img_5.png)
+![img_5.png](images/img_5.png)
 
-![img_2.png](img_2.png)
+![img_2.png](images/img_2.png)
 
 We have some initial data for you to test the application:
 
@@ -51,6 +51,6 @@ curl -X GET -H "Authorization: Bearer $token" http://localhost:8083/users/:usern
 
 Then, when you are inside your profile, you can create a TODO, and then you can see it in the TODOs list.
 
-![img_3.png](img_3.png)
+![img_3.png](images/img_3.png)
 
-![img_4.png](img_4.png)
+![img_4.png](images/img_4.png)
