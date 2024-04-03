@@ -7,7 +7,7 @@ The JSON structure is:
 ```json
 {
     "username": "admin",
-    "password": "admin",
+    "password": "admin"
 }
 ```
 
