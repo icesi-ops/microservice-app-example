@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: users-api
+  namespace: distribuidos
+  labels:
+   app: users-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+         app: users-api
+         type: users-api
+  template:
+    metadata:
+      labels:
+        app: users-api
+        type: users-api
+    spec:
+     containers:
+     - name: users-api
+       image: arturodiaz02/microservice-app-example-users
+       ports:
+        - containerPort: 8083
+       env:
+       - name: SPRING_ZIPKIN_BASE_URL
+         value: http://zipkin:9411 
+       - name: JWT_SECRET
+         value: PRFT
+       - name: SERVER_PORT
+         value: "8083"
+

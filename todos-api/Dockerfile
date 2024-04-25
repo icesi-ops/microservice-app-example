@@ -1,0 +1,16 @@
+FROM node:10-alpine
+WORKDIR /home/node/app
+COPY . .
+RUN npm install
+
+ENV AUTH_API_ADDRESS=http://authapi:8000
+ENV TODOS_API_ADDRESS=http://todosapi:8082
+
+ENV TODO_API_PORT=8082
+ENV JWT_SECRET=PRFT
+ENV REDIS_HOST=redis
+ENV REDIS_PORT=6379
+ENV REDIS_CHANNEL=log_channel
+EXPOSE ${TODO_API_PORT}
+
+CMD ["npm", "start"]

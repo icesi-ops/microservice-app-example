@@ -42,7 +42,7 @@ npm install
 ```
 ## Running
 ```
-JWT_SECRET=PRFT TODO_API_PORT=8082 npm start
+JWT_SECRET=PRFT TODO_API_PORT=8082 
 ```
 
 ## Usage

@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: redis
+  namespace: distribuidos
+
+spec:
+  selector:
+   app: redis
+  ports:
+   - protocol: TCP
+     port: 6029
+     targetPort: 6029
+     name: http

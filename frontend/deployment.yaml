@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: distribuidos
+  labels:
+   app: frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+         app: frontend
+         type: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+        type: frontend
+    spec:
+     containers:
+     - name: frontend
+       image: estebanm1812/frontend:latest
+       ports:
+        - containerPort: 8080

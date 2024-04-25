@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: log-message
+  namespace: distribuidos
+  labels:
+   app: log-message
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+         app: log-message
+         type: log-message
+  template:
+    metadata:
+      labels:
+        app: log-message
+        type: log-message
+    spec:
+     containers:
+     - name: log-message
+       image: arturodiaz02/microservice-app-example-logs
+       ports:
+        - containerPort: 6029
+       env:
+       - name: GO111MODULE
+         value: "on"
+       - name: JWT_SECRET
+         value: PRFT
+       - name: AUTH_API_PORT
+         value: "8000"
+       - name: REDIS_HOST
+         value: "redis"
+       - name: REDIS_PORT
+         value: "6379" 
+       - name: REDIS_CHANNEL
+         value: log_channel  
+             

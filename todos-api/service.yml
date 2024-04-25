@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: todos-api
+  namespace: distribuidos
+
+spec:
+  selector:
+   app: todos-api
+  ports:
+   - protocol: TCP
+     port: 8082
+     targetPort: 8082
+     name: http
