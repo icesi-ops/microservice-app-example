@@ -21,26 +21,26 @@ spec:
     
     stages {
         stage('Build') {
-            steps ('Install dependencies for todo-api'){
-                dir('./todo-api'){
+            steps ('Install dependencies for todos-api'){
+                dir('./todos-api'){
                 sh 'npm i'
             }
             }
         }
         stage('Run unit tests'){
             steps {
-                dir('./todo-api'){
+                dir('./todos-api'){
                 sh 'npm run test'
             }
             }
         }
         stage('Generate artifact'){
             steps {
-                dir('./todo-api'){
+                dir('./todos-api'){
                 sh 'ls -lha'
                 sh 'pwd'
                 sh 'mkdir artifacts'
-                sh "tar -czvf artifacts/todo-api:${env.BUILD_ID}.tar.gz ."
+                sh "tar -czvf artifacts/todos-api:${env.BUILD_ID}.tar.gz ."
             }
             }
         }
